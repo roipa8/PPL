@@ -1,0 +1,69 @@
+(define append
+    (lambda(lst1 lst2)
+    (if(eq? lst1 '())
+               lst2
+               (cons (car lst1)(append(cdr lst1) lst2)))))
+
+(define reverse
+    (lambda (lst)
+      (if(eq? lst '())
+         '()
+         (append (reverse (cdr lst))(list (car lst))))))
+
+(define increaseSize
+    (lambda(lst n)
+        (if (= n 0)
+            '()
+            (append lst (increaseSize lst (- n 1))))
+        )
+)
+
+(define length
+  (lambda (lst)
+    (if (eq? lst '())
+        0
+        (+ 1 (length (cdr lst))))))
+
+(define aux-duplicate-items1
+    (lambda(lst dup-count)
+    (if (eq? lst '())
+        '()
+        (append (aux-duplicate-items2 (car lst) (car dup-count)) (aux-duplicate-items1(cdr lst) (cdr dup-count))))))
+
+(define aux-duplicate-items2
+      (lambda(lst num)
+        (if (= num 0)
+            '()
+            (append (list lst) (aux-duplicate-items2 lst (- num 1))))))
+
+(define duplicate-items
+   (lambda(lst dup-count)
+        (aux-duplicate-items1 lst (increaseSize dup-count (length lst)))
+        ) 
+)
+
+(define payment
+  (lambda (n coins-lst)
+        (if (= n 0)
+            1
+            (if (or(< n 0)(eq? coins-lst '()))
+            0
+            (+(payment n (deleteCoin (car coins-lst) coins-lst))(payment (- n (car coins-lst)) (cdr coins-lst)))))
+  ))
+
+(define deleteCoin
+  (lambda (coin lst)
+    (if (eq? lst '())
+        '()
+        (if(eq? coin (car lst))
+           (deleteCoin coin (cdr lst))
+           (append (list (car lst)) (deleteCoin coin (cdr lst)))))))
+                               
+(define compose-n
+  (lambda( f n)
+        (if(= n 0)
+           (lambda(x) x)
+           (lambda(x)(f((compose-n f (- n 1))x)))
+        )
+  )
+)
